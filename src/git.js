@@ -5,7 +5,7 @@ import path from 'node:path';
 const exec = promisify(execFile);
 const EMPTY = '4b825dc642cb6eb9a060e54bf8d69288fbee4904';
 export async function git(cwd, args) {
-  const { stdout } = await exec('git', ['--no-pager', '-c', 'core.quotepath=false', ...args], {
+  const { stdout } = await exec('git', ['--no-pager', '--literal-pathspecs', '-c', 'core.quotepath=false', ...args], {
     cwd, encoding: 'utf8', timeout: 15000, maxBuffer: 8 * 1024 * 1024,
     env: { ...process.env, GIT_OPTIONAL_LOCKS: '0', GIT_TERMINAL_PROMPT: '0' }
   });
