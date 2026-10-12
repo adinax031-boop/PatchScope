@@ -1,0 +1,672 @@
+{
+  "name": "orbit / review-workspace",
+  "repoId": "patchscope-demo-v1",
+  "branch": "feat / persistent-reviews",
+  "head": "demo-sample",
+  "mode": "working",
+  "files": [
+    {
+      "path": "src/review/session.ts",
+      "oldPath": null,
+      "kind": "modified",
+      "staged": true,
+      "additions": 12,
+      "deletions": 3,
+      "binary": false,
+      "truncated": false,
+      "id": "7375732bbc18b80d491803e004604d690e0a8190adbd22073a63dad933f65ab5",
+      "hunks": [
+        {
+          "header": "@@ -1,12 +1,21 @@\n",
+          "lines": [
+            {
+              "type": "context",
+              "text": "import { storage } from './storage';",
+              "old": 1,
+              "next": 1
+            },
+            {
+              "type": "add",
+              "text": "import { fingerprint } from './fingerprint';",
+              "old": null,
+              "next": 2
+            },
+            {
+              "type": "context",
+              "text": "",
+              "old": 2,
+              "next": 3
+            },
+            {
+              "type": "context",
+              "text": "export function createSession(repo: Repository) {",
+              "old": 3,
+              "next": 4
+            },
+            {
+              "type": "context",
+              "text": "  const files = repo.changedFiles;",
+              "old": 4,
+              "next": 5
+            },
+            {
+              "type": "add",
+              "text": "  const key = `review:${repo.id}`;",
+              "old": null,
+              "next": 6
+            },
+            {
+              "type": "add",
+              "text": "  const saved = storage.read(key) ?? {};",
+              "old": null,
+              "next": 7
+            },
+            {
+              "type": "add",
+              "text": "",
+              "old": null,
+              "next": 8
+            },
+            {
+              "type": "context",
+              "text": "  return {",
+              "old": 5,
+              "next": 9
+            },
+            {
+              "type": "context",
+              "text": "    files,",
+              "old": 6,
+              "next": 10
+            },
+            {
+              "type": "delete",
+              "text": "    reviewed: new Set<string>(),",
+              "old": 7,
+              "next": null
+            },
+            {
+              "type": "delete",
+              "text": "    markReviewed(path: string) {",
+              "old": 8,
+              "next": null
+            },
+            {
+              "type": "delete",
+              "text": "      this.reviewed.add(path);",
+              "old": 9,
+              "next": null
+            },
+            {
+              "type": "add",
+              "text": "    reviewed: new Map(Object.entries(saved)),",
+              "old": null,
+              "next": 11
+            },
+            {
+              "type": "add",
+              "text": "    markReviewed(file: ChangedFile) {",
+              "old": null,
+              "next": 12
+            },
+            {
+              "type": "add",
+              "text": "      const digest = fingerprint(file.diff);",
+              "old": null,
+              "next": 13
+            },
+            {
+              "type": "add",
+              "text": "      this.reviewed.set(file.path, digest);",
+              "old": null,
+              "next": 14
+            },
+            {
+              "type": "add",
+              "text": "      storage.write(key, Object.fromEntries(this.reviewed));",
+              "old": null,
+              "next": 15
+            },
+            {
+              "type": "add",
+              "text": "    },",
+              "old": null,
+              "next": 16
+            },
+            {
+              "type": "add",
+              "text": "    isReviewed(file: ChangedFile) {",
+              "old": null,
+              "next": 17
+            },
+            {
+              "type": "add",
+              "text": "      return this.reviewed.get(file.path) === fingerprint(file.diff);",
+              "old": null,
+              "next": 18
+            },
+            {
+              "type": "context",
+              "text": "    },",
+              "old": 10,
+              "next": 19
+            },
+            {
+              "type": "context",
+              "text": "  };",
+              "old": 11,
+              "next": 20
+            },
+            {
+              "type": "context",
+              "text": "}",
+              "old": 12,
+              "next": 21
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "src/review/fingerprint.ts",
+      "oldPath": null,
+      "kind": "added",
+      "staged": true,
+      "additions": 8,
+      "deletions": 0,
+      "binary": false,
+      "truncated": false,
+      "id": "c34de7c17559d65838c8031ef1772da79d8c5aa12c2030d5bebc9ab1ee721d89",
+      "hunks": [
+        {
+          "header": "@@ -0,0 +1,8 @@\n",
+          "lines": [
+            {
+              "type": "add",
+              "text": "import { createHash } from 'node:crypto';",
+              "old": null,
+              "next": 1
+            },
+            {
+              "type": "add",
+              "text": "",
+              "old": null,
+              "next": 2
+            },
+            {
+              "type": "add",
+              "text": "/** Bind each checkpoint to the exact patch it reviews. */",
+              "old": null,
+              "next": 3
+            },
+            {
+              "type": "add",
+              "text": "export function fingerprint(diff: string): string {",
+              "old": null,
+              "next": 4
+            },
+            {
+              "type": "add",
+              "text": "  return createHash('sha256')",
+              "old": null,
+              "next": 5
+            },
+            {
+              "type": "add",
+              "text": "    .update(diff, 'utf8')",
+              "old": null,
+              "next": 6
+            },
+            {
+              "type": "add",
+              "text": "    .digest('hex');",
+              "old": null,
+              "next": 7
+            },
+            {
+              "type": "add",
+              "text": "}",
+              "old": null,
+              "next": 8
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "src/components/ChangeMap.tsx",
+      "oldPath": null,
+      "kind": "modified",
+      "staged": false,
+      "additions": 11,
+      "deletions": 4,
+      "binary": false,
+      "truncated": false,
+      "id": "37a257a52d0ba4dc33dcd655c450a94fe882d78f0c163bcae7144dbc776fdb80",
+      "hunks": [
+        {
+          "header": "@@ -1,5 +1,12 @@\n",
+          "lines": [
+            {
+              "type": "delete",
+              "text": "export function ChangeMap({ files }: Props) {",
+              "old": 1,
+              "next": null
+            },
+            {
+              "type": "delete",
+              "text": "  return <div className=\"map\">",
+              "old": 2,
+              "next": null
+            },
+            {
+              "type": "delete",
+              "text": "    {files.map(file => <span key={file.path} />)}",
+              "old": 3,
+              "next": null
+            },
+            {
+              "type": "delete",
+              "text": "  </div>;",
+              "old": 4,
+              "next": null
+            },
+            {
+              "type": "add",
+              "text": "export function ChangeMap({ files, onSelect }: Props) {",
+              "old": null,
+              "next": 1
+            },
+            {
+              "type": "add",
+              "text": "  return <nav className=\"map\" aria-label=\"Change volume by file\">",
+              "old": null,
+              "next": 2
+            },
+            {
+              "type": "add",
+              "text": "    {files.map(file => (",
+              "old": null,
+              "next": 3
+            },
+            {
+              "type": "add",
+              "text": "      <button",
+              "old": null,
+              "next": 4
+            },
+            {
+              "type": "add",
+              "text": "        key={file.path}",
+              "old": null,
+              "next": 5
+            },
+            {
+              "type": "add",
+              "text": "        aria-label={file.path}",
+              "old": null,
+              "next": 6
+            },
+            {
+              "type": "add",
+              "text": "        style={{ flexGrow: Math.max(file.additions + file.deletions, 1) }}",
+              "old": null,
+              "next": 7
+            },
+            {
+              "type": "add",
+              "text": "        onClick={() => onSelect(file.path)}",
+              "old": null,
+              "next": 8
+            },
+            {
+              "type": "add",
+              "text": "      />",
+              "old": null,
+              "next": 9
+            },
+            {
+              "type": "add",
+              "text": "    ))}",
+              "old": null,
+              "next": 10
+            },
+            {
+              "type": "add",
+              "text": "  </nav>;",
+              "old": null,
+              "next": 11
+            },
+            {
+              "type": "context",
+              "text": "}",
+              "old": 5,
+              "next": 12
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "test/session.test.ts",
+      "oldPath": null,
+      "kind": "added",
+      "staged": true,
+      "additions": 13,
+      "deletions": 0,
+      "binary": false,
+      "truncated": false,
+      "id": "42327eb84894ff5087bebc8dd2c0cb2e351635c4b8e450c030e7628e603d5c0c",
+      "hunks": [
+        {
+          "header": "@@ -0,0 +1,13 @@\n",
+          "lines": [
+            {
+              "type": "add",
+              "text": "import { describe, it } from 'node:test';",
+              "old": null,
+              "next": 1
+            },
+            {
+              "type": "add",
+              "text": "import assert from 'node:assert/strict';",
+              "old": null,
+              "next": 2
+            },
+            {
+              "type": "add",
+              "text": "import { createSession } from '../src/review/session';",
+              "old": null,
+              "next": 3
+            },
+            {
+              "type": "add",
+              "text": "",
+              "old": null,
+              "next": 4
+            },
+            {
+              "type": "add",
+              "text": "describe('review checkpoints', () => {",
+              "old": null,
+              "next": 5
+            },
+            {
+              "type": "add",
+              "text": "  it('reopens a file when its diff changes', () => {",
+              "old": null,
+              "next": 6
+            },
+            {
+              "type": "add",
+              "text": "    const session = createSession(repository);",
+              "old": null,
+              "next": 7
+            },
+            {
+              "type": "add",
+              "text": "    const file = { path: 'index.ts', diff: '+first' };",
+              "old": null,
+              "next": 8
+            },
+            {
+              "type": "add",
+              "text": "    session.markReviewed(file);",
+              "old": null,
+              "next": 9
+            },
+            {
+              "type": "add",
+              "text": "    assert.equal(session.isReviewed(file), true);",
+              "old": null,
+              "next": 10
+            },
+            {
+              "type": "add",
+              "text": "    assert.equal(session.isReviewed({ ...file, diff: '+second' }), false);",
+              "old": null,
+              "next": 11
+            },
+            {
+              "type": "add",
+              "text": "  });",
+              "old": null,
+              "next": 12
+            },
+            {
+              "type": "add",
+              "text": "});",
+              "old": null,
+              "next": 13
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "styles/tokens.css",
+      "oldPath": null,
+      "kind": "modified",
+      "staged": false,
+      "additions": 9,
+      "deletions": 3,
+      "binary": false,
+      "truncated": false,
+      "id": "4d5c24ed15063f300a4634049d5ad640ebe701cfef8be05b586d036281de98c4",
+      "hunks": [
+        {
+          "header": "@@ -1,5 +1,11 @@\n",
+          "lines": [
+            {
+              "type": "context",
+              "text": ":root {",
+              "old": 1,
+              "next": 1
+            },
+            {
+              "type": "delete",
+              "text": "  --surface: #ffffff;",
+              "old": 2,
+              "next": null
+            },
+            {
+              "type": "delete",
+              "text": "  --accent: #3478f6;",
+              "old": 3,
+              "next": null
+            },
+            {
+              "type": "delete",
+              "text": "  --radius: 4px;",
+              "old": 4,
+              "next": null
+            },
+            {
+              "type": "add",
+              "text": "  --surface: #f5f6f2;",
+              "old": null,
+              "next": 2
+            },
+            {
+              "type": "add",
+              "text": "  --accent: #21624f;",
+              "old": null,
+              "next": 3
+            },
+            {
+              "type": "add",
+              "text": "  --radius: 10px;",
+              "old": null,
+              "next": 4
+            },
+            {
+              "type": "add",
+              "text": "  --diff-add: #edf7ee;",
+              "old": null,
+              "next": 5
+            },
+            {
+              "type": "add",
+              "text": "  --diff-delete: #fff0ed;",
+              "old": null,
+              "next": 6
+            },
+            {
+              "type": "context",
+              "text": "}",
+              "old": 5,
+              "next": 7
+            },
+            {
+              "type": "add",
+              "text": "",
+              "old": null,
+              "next": 8
+            },
+            {
+              "type": "add",
+              "text": "@media (prefers-reduced-motion: reduce) {",
+              "old": null,
+              "next": 9
+            },
+            {
+              "type": "add",
+              "text": "  * { transition: none !important; }",
+              "old": null,
+              "next": 10
+            },
+            {
+              "type": "add",
+              "text": "}",
+              "old": null,
+              "next": 11
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "path": "README.md",
+      "oldPath": null,
+      "kind": "modified",
+      "staged": false,
+      "additions": 10,
+      "deletions": 2,
+      "binary": false,
+      "truncated": false,
+      "id": "5a6bd434e537e682d1cc991a48a278b3d3e7cbbf860f261d917705cdca884828",
+      "hunks": [
+        {
+          "header": "@@ -1,7 +1,15 @@\n",
+          "lines": [
+            {
+              "type": "context",
+              "text": "# Review workspace",
+              "old": 1,
+              "next": 1
+            },
+            {
+              "type": "context",
+              "text": "",
+              "old": 2,
+              "next": 2
+            },
+            {
+              "type": "delete",
+              "text": "A place to look at code.",
+              "old": 3,
+              "next": null
+            },
+            {
+              "type": "add",
+              "text": "A little space between writing code and shipping it.",
+              "old": null,
+              "next": 3
+            },
+            {
+              "type": "context",
+              "text": "",
+              "old": 4,
+              "next": 4
+            },
+            {
+              "type": "context",
+              "text": "## Getting started",
+              "old": 5,
+              "next": 5
+            },
+            {
+              "type": "context",
+              "text": "",
+              "old": 6,
+              "next": 6
+            },
+            {
+              "type": "delete",
+              "text": "Run the app.",
+              "old": 7,
+              "next": null
+            },
+            {
+              "type": "add",
+              "text": "```sh",
+              "old": null,
+              "next": 7
+            },
+            {
+              "type": "add",
+              "text": "node src/cli.js /path/to/repository",
+              "old": null,
+              "next": 8
+            },
+            {
+              "type": "add",
+              "text": "```",
+              "old": null,
+              "next": 9
+            },
+            {
+              "type": "add",
+              "text": "",
+              "old": null,
+              "next": 10
+            },
+            {
+              "type": "add",
+              "text": "Open the printed loopback URL. Your source stays on your machine.",
+              "old": null,
+              "next": 11
+            },
+            {
+              "type": "add",
+              "text": "",
+              "old": null,
+              "next": 12
+            },
+            {
+              "type": "add",
+              "text": "## Checkpoints",
+              "old": null,
+              "next": 13
+            },
+            {
+              "type": "add",
+              "text": "",
+              "old": null,
+              "next": 14
+            },
+            {
+              "type": "add",
+              "text": "Reviews are bound to a diff fingerprint. A changed patch needs a fresh look.",
+              "old": null,
+              "next": 15
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "totalFiles": 6,
+  "untracked": 0,
+  "generatedAt": "2026-10-12T00:00:00Z"
+}
