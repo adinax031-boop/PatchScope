@@ -46,3 +46,14 @@ test('literal special filenames cannot become Git arguments', { skip: process.pl
   const dir=await fixture(t);const filename='-strange\tname\n.txt';await writeFile(path.join(dir,filename),'safe\n');await git(dir,['add','--',filename]);const s=await snapshot(dir);assert.equal(s.files[0].path,filename);assert.equal(s.files[0].hunks[0].lines[0].text,'safe');
 });
 test('invalid scope rejected',async()=>{await assert.rejects(snapshot('.','HEAD; echo nope'),/Unsupported/);});
+
+test('pathspec metacharacters are treated as literal filenames', async t => {
+  const dir = await fixture(t);
+  await writeFile(path.join(dir, '[abc].txt'), 'literal\n');
+  await writeFile(path.join(dir, 'a.txt'), 'other\n');
+  await git(dir, ['add', '.']);
+  const s = await snapshot(dir);
+  const file = s.files.find(f => f.path === '[abc].txt');
+  assert.equal(file.hunks.length, 1);
+  assert.equal(file.hunks[0].lines[0].text, 'literal');
+});
