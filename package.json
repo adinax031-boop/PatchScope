@@ -1,0 +1,12 @@
+{
+  "name": "patchscope",
+  "version": "0.1.0",
+  "description": "A local-first Git review workspace with zero runtime dependencies.",
+  "type": "module",
+  "bin": { "patchscope": "src/cli.js" },
+  "scripts": { "start": "node src/cli.js", "test": "node --test", "check": "node --check src/cli.js && node --check src/server.js && node --check src/git.js && node --check docs/app.js" },
+  "engines": { "node": ">=22" },
+  "files": ["src", "docs", "LICENSE", "README.md"],
+  "license": "MIT",
+  "repository": { "type": "git", "url": "https://github.com/adinax031-boop/PatchScope.git" }
+}
